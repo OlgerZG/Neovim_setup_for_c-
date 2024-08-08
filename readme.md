@@ -18,11 +18,11 @@ sudo apt install fonts-jetbrains-mono
 
 #!/bin/bash
 
-# Remove Neovim configuration and packer.nvim
+# Remove Neovim previous configurations 
 echo "Removing existing Neovim configuration and packer.nvim..."
 rm -rf ~/.config/nvim
 rm -rf ~/.local/share/nvim
-rm -rf ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+
 
 # Clone NvChad Configuration -- ------------------------------------------------------------------------------------------------------------
 echo "Cloning NvChad configuration..."
@@ -168,6 +168,31 @@ require('custom.plugins')
 require('custom.lsp')
 require('custom.treesitter')
 require('custom.dap')
+
+-- NvChad Configuration 
+
+require "core"
+
+local custom_init_path = vim.api.nvim_get_runtime_file("lua/custom/init.lua", false)[1]
+
+if custom_init_path then
+  dofile(custom_init_path)
+end
+
+require("core.utils").load_mappings()
+
+local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
+
+-- bootstrap lazy.nvim!
+if not vim.loop.fs_stat(lazypath) then
+  require("core.bootstrap").gen_chadrc_template()
+  require("core.bootstrap").lazy(lazypath)
+end
+
+dofile(vim.g.base46_cache .. "defaults")
+vim.opt.rtp:prepend(lazypath)
+require "plugins"
+
 EOL
 
 # Install and Update Plugins----------------------------------------------------------------------------------------------------------
