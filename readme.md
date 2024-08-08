@@ -16,16 +16,30 @@ sudo rm -rf neovim/
 
 sudo apt install fonts-jetbrains-mono
 
-# Clone NvChad Configuration -- ------------------------------------------------------------------------------------------------------------
+#!/bin/bash
+
+# Remove Neovim configuration and packer.nvim
+echo "Removing existing Neovim configuration and packer.nvim..."
 rm -rf ~/.config/nvim
+rm -rf ~/.local/share/nvim
+rm -rf ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+
+# Clone NvChad Configuration -- ------------------------------------------------------------------------------------------------------------
+echo "Cloning NvChad configuration..."
 git clone -b v2.0 https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+
+# Install packer.nvim --------------------------------------------------------------------------------------------
+echo "Installing packer.nvim..."
+mkdir -p ~/.local/share/nvim/site/pack/packer/start
+git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
 # Create and Edit Plugin Configuration Files -----------------------------------------------------------------------------------------------
 
 mkdir -p ~/.config/nvim/lua/custom
+
 cat <<EOL > ~/.config/nvim/lua/custom/plugins.lua
 -- ~/.config/nvim/lua/custom/plugins.lua
-return require("packer").startup(function()
+require("packer").startup(function()
   -- NvChad plugins
   use "wbthomason/packer.nvim"
 
@@ -140,7 +154,32 @@ dap.configurations.cpp = {
 dap.configurations.c = dap.configurations.cpp
 EOL
 
+# Update init.lua to ensure packer.nvim is loaded correctly -----------------------------------------------------------------------------------------------
+
+cat <<EOL > ~/.config/nvim/init.lua
+-- ~/.config/nvim/init.lua
+
+-- Load packer.nvim
+vim.cmd [[packadd packer.nvim]]
+
+-- Load custom configuration files
+require('packer')
+require('custom.plugins')
+require('custom.lsp')
+require('custom.treesitter')
+require('custom.dap')
+EOL
+
 # Install and Update Plugins----------------------------------------------------------------------------------------------------------
 
-nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerInstall'
-nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerUpdate'
+echo "Installing plugins with Neovim..."
+nvim --headless -c 'PackerInstall' -c 'quit'
+
+# Update plugins
+echo "Updating plugins with Neovim..."
+nvim --headless -c 'PackerUpdate' -c 'quit'
+
+echo "Setup complete. Please open Neovim and run :PackerSync to ensure all plugins are installed and updated properly."
+
+# At this point you got many errors, just open nvim, use :PackerSync and close it one or two times :)
+
