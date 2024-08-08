@@ -30,7 +30,3 @@ git clone -b v2.0 https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 
 
 
-echo "Setup complete. Please open Neovim and run :PackerSync to ensure all plugins are installed and updated properly."
-
-# At this point you got many errors, just open nvim, use :PackerSync and close it one or two times :)
-
