@@ -1,4 +1,4 @@
---Install nvim--------------------------------------------------------------------------------------------------------------
+# Install nvim--------------------------------------------------------------------------------------------------------------
 
 git clone https://github.com/neovim/neovim.git
 cd neovim
@@ -7,20 +7,20 @@ make CMAKE_BUILD_TYPE=Release
 sudo make install
 nvim --version
 
---Clean nvim folder--------------------------------------------------------------------------------------------------------------
+# Clean nvim folder--------------------------------------------------------------------------------------------------------------
 
 cd .. 
 sudo rm -rf neovim/
 
--Install font------------------------------------------------------------------------------------------------------------
+# Install font------------------------------------------------------------------------------------------------------------
 
 sudo apt install fonts-jetbrains-mono
 
--- Clone NvChad Configuration -- ------------------------------------------------------------------------------------------------------------
+# Clone NvChad Configuration -- ------------------------------------------------------------------------------------------------------------
 rm -rf ~/.config/nvim
 git clone -b v2.0 https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 
--- Create and Edit Plugin Configuration Files -----------------------------------------------------------------------------------------------
+# Create and Edit Plugin Configuration Files -----------------------------------------------------------------------------------------------
 
 mkdir -p ~/.config/nvim/lua/custom
 cat <<EOL > ~/.config/nvim/lua/custom/plugins.lua
@@ -140,7 +140,7 @@ dap.configurations.cpp = {
 dap.configurations.c = dap.configurations.cpp
 EOL
 
-------------------------------------------------------------------------------------------------------------
+# Install and Update Plugins----------------------------------------------------------------------------------------------------------
 
 nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerInstall'
 nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerUpdate'
